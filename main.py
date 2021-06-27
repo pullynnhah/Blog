@@ -1,3 +1,4 @@
+import os
 from functools import wraps
 from flask import Flask, render_template, redirect, url_for, flash, abort
 from flask_bootstrap import Bootstrap
@@ -18,7 +19,11 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+db_path = os.getenv('DATABASE_URL')
+if db_path is None:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
